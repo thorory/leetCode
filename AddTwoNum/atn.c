@@ -15,7 +15,7 @@ struct ListNode {
 
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 	struct ListNode *new_list;
-	int cin = 0;
+	int cin = 0, tmp = 0;
 	struct ListNode *start_list, *end_list;
 	int flag = 0;
 
@@ -36,10 +36,20 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 				end_list->next = l2;
 				if (cin == 0)
 					return start_list;
-				l2->val = (end_list->val + l2->val + cin) % 10;
-				cin = new_list->val / 10;
+				tmp = (l2->val + cin) ;
+				l2->val = tmp % 10;
+				cin = tmp / 10;
 				end_list = l2;
+				l2 = l2->next;
 			}
+			if(cin > 0)
+			{
+				new_list = (struct ListNode*)malloc(sizeof(l1[0]));
+				new_list->val = cin;
+				new_list->next = NULL;
+				end_list->next = new_list;
+			}
+
 			return start_list;
 		}
 		if (l2 == NULL)
@@ -54,41 +64,64 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 				end_list->next = l1;
 				if (cin == 0)
 					return start_list;
-				l1->val = (end_list->val + l1->val + cin) % 10;
-				cin = new_list->val / 10;
+				tmp = (l1->val + cin) ;
+				l1->val = tmp % 10;
+				cin = tmp / 10;
 				end_list = l1;
+				l1 = l1->next;
+			}
+			if(cin > 0)
+			{
+				new_list = (struct ListNode*)malloc(sizeof(l1[0]));
+				new_list->val = cin;
+				new_list->next = NULL;
+				end_list->next = new_list;
 			}
 			return start_list;
 		}
 
 		/* add two number */
-		flag = 1;
 		new_list = (struct ListNode*)malloc(sizeof(l1[0]));
 		new_list->val = (l1->val + l2->val + cin) % 10;
-		cin = new_list->val / 10;
+		cin = (l1->val + l2->val + cin)  / 10;
 		new_list->next = NULL;
-		end_list->next = new_list;
-		end_list = new_list;
+		if(flag == 0)
+		{
+			start_list = new_list;
+			end_list = new_list;
+			flag = 1;
+		}
+		else
+		{
+			end_list->next = new_list;
+			end_list = new_list;
+		}
+		l1 = l1->next;
+		l2 = l2->next;
 	}
 	return start_list;
 }
 
 int main()
 {
-	struct ListNode l1, l2, *l = NULL;
+	struct ListNode l1, l2,  l3, *l = NULL;
 	l1.next = NULL;
 	l1.val = 1;
 
-	l2.next = NULL;
-	l2.val = 1;
+	l2.next = &l3;
+	l2.val = 9;
 
-	l = addTwoNumbers(&l1, &l2);
+	l3.val = 9;
+	l3.next = NULL;
+
+	l = addTwoNumbers(&l1,  &l2);
 
 	while(l != NULL)
 	{
 		printf("%d->", l->val);
 		l = l->next;
 	}
+	printf("\n");
 
 	return 0;
 }
