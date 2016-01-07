@@ -91,7 +91,7 @@ int main()
 
     double val;
 
-    val = findMedianSortedArrays(a, 2, b, 2);
+    val = findMedianSortedArrays(a, 3, b, 2);
 
     printf("%f\n", val);
 }
